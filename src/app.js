@@ -7,8 +7,20 @@ const AdminRouter = require('./router/admin_routes');
 const loginRouter  =require('./router/auth_routes');
 const userRouter = require('./router/user_routes');
 
+const defaultOrigins = ['http://localhost:5173'];
+const envOrigins = (process.env.CORS_ORIGINS || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins])];
+
 app.use(cors({
-    origin:'http://localhost:5173',
+    origin(origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error('Not allowed by CORS'));
+    },
     credentials:true
 }));
 app.use(express.json());
