@@ -14,19 +14,36 @@ const envOrigins = (process.env.CORS_ORIGINS || '')
     .filter(Boolean);
 const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins])];
 
-app.use(cors({
+function isAllowedVercelOrigin(origin) {
+    return /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin);
+}
+
+function isAllowedNetlifyOrigin(origin) {
+    return /^https:\/\/[a-z0-9-]+\.netlify\.app$/i.test(origin);
+}
+
+const corsOptions = {
     origin(origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (
+            !origin ||
+            allowedOrigins.includes(origin) ||
+            isAllowedVercelOrigin(origin) ||
+            isAllowedNetlifyOrigin(origin)
+        ) {
             return callback(null, true);
         }
         return callback(new Error('Not allowed by CORS'));
     },
-    credentials:true
-}));
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
-app.use('/api/auth',AdminRouter);
+app.use('/api/admin',AdminRouter);
 app.use('/api/auth',loginRouter);
 app.use('/api/user',userRouter);
 
