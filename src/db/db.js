@@ -26,7 +26,10 @@ async function connectToDb() {
                 maxPoolSize: 10,
                 serverSelectionTimeoutMS: 10000
             })
-            .then((mongooseInstance) => mongooseInstance)
+            .then((mongooseInstance) => {
+                console.log("Connected to MongoDB");
+                return mongooseInstance;
+            })
             .catch((error) => {
                 cached.promise = null;
                 throw error;
