@@ -44,6 +44,7 @@ app.use(express.json());
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 app.use('/api/admin',AdminRouter);
+app.use('/api/auth',AdminRouter);
 app.use('/api/auth',loginRouter);
 app.use('/api/user',userRouter);
 
