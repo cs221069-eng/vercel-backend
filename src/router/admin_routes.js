@@ -6,6 +6,7 @@ const { requireAuth, authorizeRoles } = require('../middleware/auth_middleware')
 
 router.post('/create/9165', AdminRouter.CreateAdmin);
 router.get('/admins/9165', requireAuth, authorizeRoles('admin'), AdminRouter.getAllAdmins);
+router.get('/dashboard/9165', requireAuth, authorizeRoles('admin'), AdminRouter.getAdminDashboardSummary);
 router.get('/admin/dashboard/9165', requireAuth, authorizeRoles('admin'), AdminRouter.getAdminDashboardSummary);
 
 
