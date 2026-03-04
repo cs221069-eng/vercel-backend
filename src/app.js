@@ -43,6 +43,15 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
+app.get('/api/health/9165', (req, res) => {
+    return res.status(200).json({
+        success: true,
+        message: 'API is running',
+        commit: process.env.VERCEL_GIT_COMMIT_SHA || 'local',
+        branch: process.env.VERCEL_GIT_COMMIT_REF || 'local'
+    });
+});
+
 app.use('/api/admin',AdminRouter);
 app.use('/api/auth',AdminRouter);
 app.use('/api/auth',loginRouter);
